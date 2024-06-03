@@ -1,5 +1,35 @@
 {% extends "capstone/layout.html" %}
 
-{% block body %}
-Halo
-{% endblock %} 
+{% block body %} 
+{% load static %}
+
+
+
+
+
+<div class="container mt-5">
+    <div class="card p-3 mt-2">
+        <div class="untereBox">
+           
+{% if request.user.is_authenticated %}
+<p>{{ request.user.username }}</p>
+<a href="{% url 'logout' %}">Logout</a>
+{% else %}
+<a href="{% url 'login' %}">Login</a>
+<a href="{% url 'signup' %}">Signup</a>
+{% endif %}
+
+<h1>Welcome!</h1>
+        </div>
+    </div>
+</div> 
+
+
+
+
+
+
+
+
+
+{% endblock %}

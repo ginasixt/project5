@@ -1,0 +1,27 @@
+{% extends "capstone/layout.html" %}
+{% block body %}
+
+<div class="container mt-5">
+    <div class="card p-3 mt-2">
+        <div class="untereBox">
+            <div class="text-center">
+
+                <h1>Login</h1>
+                <form method="POST" class="form-signin">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button class="btn btn-lg btn-primary btn-block"  type="submit">Login</button>
+                    <a href="{% url 'signup' %}">Create a account</a>
+                </form>
+
+             
+
+            </div>
+        </div>
+    </div>
+</div> 
+
+
+
+
+{% endblock %}
