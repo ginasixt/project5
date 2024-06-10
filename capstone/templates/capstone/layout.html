@@ -23,19 +23,19 @@
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav mr-auto">
                 {% if user.is_authenticated %}
-                    <li class="nav-item">
+                    {% comment %} <li class="nav-item">
                         <a class="nav-link" href="{%url 'index' %}">Your Profile</a>
-                    </li>
+                    </li> {% endcomment %}
                 {% endif %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'index' %}">All Posts
+                        <a class="nav-link" href="{% url 'index' %}">Home
                             <span class="sr-only">
                         </a>
                     </li>
                 {% if user.is_authenticated %}
-                    <li class="nav-item">
+                    {% comment %} <li class="nav-item">
                         <a class="nav-link" href="{% url 'index' %}">Following</a>
-                    </li>
+                    </li> {% endcomment %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
                     </li>

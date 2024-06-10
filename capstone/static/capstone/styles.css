@@ -1,0 +1,94 @@
+body {
+    padding: 10px;
+    background-color: #f7f6f6;
+}
+
+.icons i{
+
+    margin-left: 8px;
+}
+
+
+.untereBox{
+
+    padding: 16px;
+    padding-right: 20px;
+    padding-left: 20px;
+
+}
+.imggina {
+
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+
+  .card-img-top {
+    object-fit: cover;
+    width: 100%;
+    height: 250px;
+  }
+  
+  
+  
+  .row {
+    background: #f8f9fa;
+  
+  }
+  
+  
+  @media (min-width: 768px) {
+  
+    .card-deck.two-col .card {
+      flex-basis: calc(50% - 30px);
+      margin: 1%;
+      background: #f8f9fa;
+    }
+
+    .card-deck.three-col .card {
+      flex-basis: calc(33.33% - 30px);
+      margin: 1%;
+      
+    }
+  }
+
+  .card-deck .card {
+    flex-basis: 66.67%;
+    margin: 1%;
+  }
+  /*# sourceMappingURL=style.css.map */
+  
+
+.card {
+    
+    border: none;
+    box-shadow: 5px 6px 6px 2px #e9ecef;
+    border-radius: 4px;
+}
+
+
+.dots{
+
+  height: 4px;
+  width: 4px;
+  margin-bottom: 2px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.badge{
+
+        padding: 7px;
+        padding-right: 9px;
+    padding-left: 16px;
+    box-shadow: 5px 6px 6px 2px #e9ecef;
+}
+
+.user-img{
+
+    margin-top: 4px;
+}
+
+

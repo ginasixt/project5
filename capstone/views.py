@@ -1,12 +1,22 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout 
 from .forms import SignupForm, LoginForm
+from .models import Group
+
+
 
 
 # Create your views here.
+
+# Group detail page
+def group_detail(request, id):
+    group = Group.objects.get(id=id)
+    return render(request, 'capstone/group_detail.html', {'group': group})
+
 # Home page
 def index(request):
-    return render(request, 'capstone/index.html')
+    groups = Group.objects.all()
+    return render(request, 'capstone/index.html', {'groups': groups})
 
 # signup page
 def user_signup(request):
