@@ -2,8 +2,9 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout 
 from .forms import SignupForm, LoginForm
 from .models import Group
-
-
+from .forms import GroupForm, ActivityForm
+from django.contrib import messages
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
 # Create your views here.
@@ -16,7 +17,23 @@ def group_detail(request, id):
 # Home page
 def index(request):
     groups = Group.objects.all()
-    return render(request, 'capstone/index.html', {'groups': groups})
+    group_form = GroupForm()
+    activity_form = ActivityForm()
+
+    paginator = Paginator(groups, 5)
+    page_number = request.GET.get('page')
+
+    try:
+        groups = paginator.page(page_number)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        groups = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        groups = paginator.page(paginator.num_pages)
+
+
+    return render(request, 'capstone/index.html', {'groups': groups, 'group_form': group_form, 'activity_form': activity_form})
 
 # signup page
 def user_signup(request):
@@ -48,3 +65,31 @@ def user_login(request):
 def user_logout(request):
     logout(request)
     return redirect('login')
+
+# Create a new group
+def create_group(request):
+    if request.method == 'POST':
+        form = GroupForm(request.POST)
+        if form.is_valid():
+            group = form.save(commit=False)
+            group.save()
+            form.save_m2m()  # Needed for many-to-many fields
+            return redirect('index')  # Redirect back to the index page
+    else:
+        form = GroupForm()
+    return render(request, 'capstone/index.html', {'form': form})
+
+
+# Create a new activity
+def create_activity(request):
+    if request.method == 'POST':
+        form = ActivityForm(request.POST)
+        if form.is_valid():
+            activity = form.save()
+            messages.success(request, 'Activity created successfully.')
+            return redirect('index')  # Redirect back to the index page
+        else:
+            messages.error(request, 'Error creating activity. Please try again.')
+    else:
+        form = ActivityForm()
+    return render(request, 'capstone/index.html', {'form': form})
