@@ -9,9 +9,11 @@ class ActivityForm(forms.ModelForm):
         fields = ['name']
 
 class GroupForm(forms.ModelForm):
+    time_and_date = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}), required=True)
+    
     class Meta:
         model = Group
-        fields = ['name', 'location' ,  'description',  'activity']
+        fields = ['name', 'location', 'description', 'activity', 'time_and_date']
 
 class SignupForm(UserCreationForm):
     class Meta:
@@ -21,4 +23,3 @@ class SignupForm(UserCreationForm):
 class LoginForm(forms.Form):
     username = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput)
-    

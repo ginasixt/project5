@@ -11,20 +11,21 @@
     <div class="card p-3 mt-2">
         <div class="untereBox">
            
-<h1>Welcome {{ request.user.username }}!</h1>
-{% for group in groups %}
-    <li class="nav-item">
-        <a class="nav-link" href="{% url 'group_detail' group.id %}">{{ group.name }}</a>
-    </li>
-{% endfor %}
-        </div>
+        <h1>This is the group {{ group.name }}</h1>
+        {{ group.description }} <br>
+        In {{ group.location }} 
+        <br>
+
+        {% if request.user.is_authenticated and not request.user in group.users.all %}
+            Do you want to join the group?
+            <a href="{% url 'join_group' group.id %}" class="btn btn-primary">Click here to join the group</a>
+        {% endif %}
+        {% if request.user.is_authenticated and request.user in group.users.all %}
+            You are already a member of this group
+        {% endif %}
+        </div>  
     </div>
 </div> 
-
-
-
-
-
 
 
 

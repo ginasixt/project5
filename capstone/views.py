@@ -1,3 +1,5 @@
+from django.db import IntegrityError
+from django.http import HttpResponseBadRequest
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout 
 from .forms import SignupForm, LoginForm
@@ -10,8 +12,8 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # Create your views here.
 
 # Group detail page
-def group_detail(request, id):
-    group = Group.objects.get(id=id)
+def group_detail(request, group_id):
+    group = Group.objects.get(id=group_id)
     return render(request, 'capstone/group_detail.html', {'group': group})
 
 # Home page
@@ -66,6 +68,16 @@ def user_logout(request):
     logout(request)
     return redirect('login')
 
+
+# Join a group
+def join_group(request, group_id):
+    group = Group.objects.get(id=group_id)
+    group.users.add(request.user)
+    group.save()
+    return redirect('group_detail', group_id=group_id)
+
+
+
 # Create a new group
 def create_group(request):
     if request.method == 'POST':
@@ -74,11 +86,13 @@ def create_group(request):
             group = form.save(commit=False)
             group.save()
             form.save_m2m()  # Needed for many-to-many fields
+            messages.success(request, ' Group: Group created successfully.')
             return redirect('index')  # Redirect back to the index page
+        else:
+            messages.error(request, ' Group: Error creating group. Please try again.')
     else:
         form = GroupForm()
     return render(request, 'capstone/index.html', {'form': form})
-
 
 # Create a new activity
 def create_activity(request):
@@ -86,10 +100,10 @@ def create_activity(request):
         form = ActivityForm(request.POST)
         if form.is_valid():
             activity = form.save()
-            messages.success(request, 'Activity created successfully.')
+            messages.success(request, " Activity: Activity created successfully.")
             return redirect('index')  # Redirect back to the index page
         else:
-            messages.error(request, 'Error creating activity. Please try again.')
+            messages.error(request, ' Activity: Error creating activity. Please try again.')
     else:
         form = ActivityForm()
     return render(request, 'capstone/index.html', {'form': form})
