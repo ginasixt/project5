@@ -11,13 +11,13 @@
     <div class="card p-3 mt-2">
         <div class="untereBox">
            
-        <h1>This is the group {{ group.name }}</h1>
+        <h1>This is the group: {{ group.name }}</h1>
         {{ group.description }} <br>
-        In {{ group.location }} 
+        In {{ group.location }} created from {{ group.creator }}. <br>
         <br>
 
         {% if request.user.is_authenticated and not request.user in group.users.all %}
-            Do you want to join the group?
+            Do you want to join the group? <br>
             <a href="{% url 'join_group' group.id %}" class="btn btn-primary">Click here to join the group</a>
         {% endif %}
         {% if request.user.is_authenticated and request.user in group.users.all %}

@@ -37,6 +37,11 @@ def index(request):
 
     return render(request, 'capstone/index.html', {'groups': groups, 'group_form': group_form, 'activity_form': activity_form})
 
+def create_group_page(request):
+    group_form = GroupForm()
+    return render(request, 'capstone/create_group.html', {'group_form': group_form})
+
+
 # signup page
 def user_signup(request):
     if request.method == 'POST':
@@ -77,13 +82,14 @@ def join_group(request, group_id):
     return redirect('group_detail', group_id=group_id)
 
 
-
 # Create a new group
 def create_group(request):
     if request.method == 'POST':
         form = GroupForm(request.POST)
         if form.is_valid():
             group = form.save(commit=False)
+            group.creator = request.user 
+            group.users.add(request.user)
             group.save()
             form.save_m2m()  # Needed for many-to-many fields
             messages.success(request, ' Group: Group created successfully.')

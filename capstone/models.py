@@ -16,6 +16,7 @@ class Group(models.Model):
     activity = models.ForeignKey(Activity, on_delete=models.CASCADE, default=None)
     time_and_date = models.DateTimeField(default=None)
     users = models.ManyToManyField(User)
+    creator = models.ForeignKey(User, on_delete=models.CASCADE, default=None, related_name='creator')
     def __str__(self):
         return f"The group {self.name} with the activity {self.activity} and the Group Members: {self.users}."
     
