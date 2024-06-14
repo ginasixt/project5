@@ -1,0 +1,82 @@
+{% extends "capstone/layout.html" %}
+
+{% block body %} 
+{% load static %}
+
+<div id="calendar">
+    <div id="calendar-header">
+      <button id="prev">Prev</button>
+      <span id="month-year"></span>
+      <button id="next">Next</button>
+    </div>
+    <div id="calendar-body">
+      <div id="day-names">
+        <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+      </div>
+      <div id="days-container"></div>
+    </div>
+</div>
+
+<!-- JavaScript code for calendar functionality -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const currentDate = new Date();
+        const daysContainer = document.getElementById('days-container');
+    
+        // Render the month and year in the header
+        function renderHeader(date) {
+            const monthYear = document.getElementById('month-year');
+            monthYear.textContent = date.toLocaleDateString('default', { month: 'long', year: 'numeric' });
+        }
+    
+        // Render the days of the month
+        function renderDays(date) {
+            daysContainer.innerHTML = '';
+    
+            const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+            const lastDayOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+            const startDay = firstDayOfMonth.getDay();
+            const totalDays = lastDayOfMonth.getDate();
+    
+            const today = new Date();
+            const isCurrentMonth = date.getFullYear() === today.getFullYear() && date.getMonth() === today.getMonth();
+    
+            // Fill empty slots for days before the first of the month
+            for (let i = 0; i < startDay; i++) {
+                const emptyDiv = document.createElement('div');
+                daysContainer.appendChild(emptyDiv);
+            }
+    
+            // Fill in the days of the month
+            for (let i = 1; i <= totalDays; i++) {
+                const dayDiv = document.createElement('div');
+                dayDiv.classList.add('day');
+                dayDiv.textContent = i;
+    
+                // Highlight the current date
+                if (isCurrentMonth && i === today.getDate()) {
+                    dayDiv.classList.add('current-date');
+                }
+    
+                daysContainer.appendChild(dayDiv);
+            }
+        }
+    
+        // Change the month displayed
+        function changeMonth(month) {
+            currentDate.setMonth(currentDate.getMonth() + month);
+            renderHeader(currentDate);
+            renderDays(currentDate);
+        }
+    
+        // Initialize the calendar on page load
+        renderHeader(currentDate);
+        renderDays(currentDate);
+    
+        // Event listeners for changing months
+        document.getElementById('prev').addEventListener('click', () => changeMonth(-1));
+        document.getElementById('next').addEventListener('click', () => changeMonth(1));
+    });
+    
+</script>
+{% endblock %}
