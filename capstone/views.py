@@ -1,7 +1,8 @@
 from django.db import IntegrityError
 from django.http import HttpResponseBadRequest
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout 
+from django.contrib.auth import authenticate, login, logout
+from django.urls import reverse 
 from .forms import SignupForm, LoginForm
 from .models import Group
 from .forms import GroupForm, ActivityForm
@@ -41,6 +42,11 @@ def create_group_page(request):
     group_form = GroupForm()
     return render(request, 'capstone/create_group.html', {'group_form': group_form})
 
+# Calendar page
+def calendar_view(request):
+    user_groups = Group.objects.filter(users=request.user)
+    group_dates = {group.time_and_date.strftime('%Y-%m-%d'): {'time': group.time_and_date.strftime('%H:%M'), 'name': group.name, 'url': reverse('group_detail', args=[group.id])} for group in user_groups}
+    return render(request, 'capstone/calendar.html', {'user_groups': user_groups, 'group_dates': group_dates})
 
 # signup page
 def user_signup(request):
@@ -89,16 +95,18 @@ def create_group(request):
         if form.is_valid():
             group = form.save(commit=False)
             group.creator = request.user 
-            group.users.add(request.user)
-            group.save()
+            group.save() # Save the group to the database
+            group.users.add(request.user)  # Add the creator to the group
             form.save_m2m()  # Needed for many-to-many fields
-            messages.success(request, ' Group: Group created successfully.')
-            return redirect('index')  # Redirect back to the index page
+            messages.success(request, "Group: Group created successfully.")
+            return redirect('group_detail', group_id=group.id)  # Redirect to the group_detail page of the newly created group
         else:
-            messages.error(request, ' Group: Error creating group. Please try again.')
+            messages.error(request, 'Group: Error creating group. Please try again and fill out all fields.')
+            return redirect('create_group_page')
     else:
         form = GroupForm()
-    return render(request, 'capstone/index.html', {'form': form})
+         
+    return redirect('create_group_page')
 
 # Create a new activity
 def create_activity(request):
@@ -106,10 +114,10 @@ def create_activity(request):
         form = ActivityForm(request.POST)
         if form.is_valid():
             activity = form.save()
-            messages.success(request, " Activity: Activity created successfully.")
+            messages.success(request, "Activity: Activity created successfully.")
             return redirect('index')  # Redirect back to the index page
         else:
-            messages.error(request, ' Activity: Error creating activity. Please try again.')
+            messages.error(request, 'Activity: Error creating activity. Please try again.')
     else:
         form = ActivityForm()
     return render(request, 'capstone/index.html', {'form': form})

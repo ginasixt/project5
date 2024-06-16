@@ -17,6 +17,11 @@
     </div>
 </div>
 
+<script type="text/javascript">
+    let groupDates = {{ group_dates|safe }};
+    console.log(groupDates);
+</script>
+
 <!-- JavaScript code for calendar functionality -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -32,32 +37,53 @@
         // Render the days of the month
         function renderDays(date) {
             daysContainer.innerHTML = '';
-    
+
             const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
             const lastDayOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-            const startDay = firstDayOfMonth.getDay();
             const totalDays = lastDayOfMonth.getDate();
-    
+
             const today = new Date();
             const isCurrentMonth = date.getFullYear() === today.getFullYear() && date.getMonth() === today.getMonth();
-    
-            // Fill empty slots for days before the first of the month
-            for (let i = 0; i < startDay; i++) {
-                const emptyDiv = document.createElement('div');
-                daysContainer.appendChild(emptyDiv);
-            }
-    
+
             // Fill in the days of the month
             for (let i = 1; i <= totalDays; i++) {
                 const dayDiv = document.createElement('div');
                 dayDiv.classList.add('day');
-                dayDiv.textContent = i;
-    
-                // Highlight the current date
-                if (isCurrentMonth && i === today.getDate()) {
-                    dayDiv.classList.add('current-date');
+
+                const dayNumberDiv = document.createElement('div');
+                dayNumberDiv.classList.add('day-number'); 
+                dayNumberDiv.textContent = i;
+                dayDiv.appendChild(dayNumberDiv);
+
+                // Convert the current date to the same format as the keys in groupDates
+                const currentDate = new Date(date.getFullYear(), date.getMonth(), i);
+                const currentDateStr = currentDate.toISOString().split('T')[0];
+
+                // Check if the current date is in groupDates
+                if (groupDates.hasOwnProperty(currentDateStr)) {
+                    // Add an additional class to the day's div
+                    dayDiv.classList.add('group-event');
+
+                    // Create a new div for the group event details
+                    const groupEventDiv = document.createElement('div');
+                    groupEventDiv.classList.add('event');  // Add a class to the group event div
+
+                    // Create a new link for the group event details
+                    const groupEventLink = document.createElement('a');
+                    groupEventLink.href = groupDates[currentDateStr].url;
+                    groupEventLink.textContent = groupDates[currentDateStr].time + ' ' + groupDates[currentDateStr].name;
+                    groupEventLink.classList.add('group-event-link');  // Add a class to the group event link
+
+                    groupEventDiv.appendChild(groupEventLink);
+                    dayDiv.appendChild(groupEventDiv);
                 }
-    
+            
+
+                // Check if the current date is today
+                if (isCurrentMonth && i === today.getDate()) {
+                    dayDiv.classList.add('today');
+                }
+
                 daysContainer.appendChild(dayDiv);
             }
         }
