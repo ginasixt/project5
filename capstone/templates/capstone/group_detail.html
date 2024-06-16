@@ -13,22 +13,31 @@
            
         <h1>This is the group: {{ group.name }}</h1>
         {{ group.description }} <br>
-        In {{ group.location }} created from {{ group.creator }}. <br>
+        In {{ group.location }} created by {{ group.creator }}. <br>
+        {% if next_event_date is not null %}
+        The next group meet up is on {{ next_event_date }}
+        {% elif next_event_date is null %}
+        There are no group events upcoming, the last event was on {{ group.time_and_date }}, 
+        wait till the creator is updating the dates or <a href="{% url 'create_group' %}">create your own group</a>.
+        {% endif %}
         <br>
+        <br> 
 
         {% if request.user.is_authenticated and not request.user in group.users.all %}
-            Do you want to join the group?
-            <br> <br>
             <a href="{% url 'join_group' group.id %}" class="btn btn-primary">Join the group</a>
         {% endif %}
         {% if request.user.is_authenticated and request.user in group.users.all %}
-            You are a member of this group.
-            <br> <br>
             <a href="{% url 'leave_group' group.id %}" class="btn btn-danger">Leave the group</a>
         {% endif %}
+
+        {% if request.user == group.creator %}
+            <a href="{% url 'edit_group' group.id %}" class="btn btn-secondary float-right">Edit Group</a>
+        {% endif %}
+
         </div>  
     </div>
 </div> 
+
 
 
 

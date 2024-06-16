@@ -8,7 +8,9 @@ from .models import Group
 from .forms import GroupForm, ActivityForm
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from datetime import timedelta
+from datetime import timedelta, timezone
+from django.shortcuts import get_object_or_404
+from django.utils import timezone
 
 
 # Create your views here.
@@ -16,7 +18,22 @@ from datetime import timedelta
 # Group detail page
 def group_detail(request, group_id):
     group = Group.objects.get(id=group_id)
-    return render(request, 'capstone/group_detail.html', {'group': group})
+
+    if (group.time_and_date >= timezone.now()):
+        next_event_date = group.time_and_date
+    elif group.recurring:
+        current_date = group.time_and_date
+        max_iterations = 10
+
+        for _ in range(max_iterations):
+            if current_date >= timezone.now():
+                next_event_date = current_date
+                break
+            current_date += timedelta(days=7)
+    else:
+        next_event_date = None
+    
+    return render(request, 'capstone/group_detail.html', {'group': group, 'next_event_date': next_event_date,})
 
 # Home page
 def index(request):
@@ -111,24 +128,33 @@ def leave_group(request, group_id):
     return redirect('group_detail', group_id=group_id)
 
 # Create a new group
-def create_group(request):
+def create_group(request, group_id=None):
+    # Check if the group exists and the current user is the creator
+    if group_id:
+        group = get_object_or_404(Group, id=group_id)
+        if group.creator != request.user:
+            messages.error(request, 'You do not have permission to edit this group.')
+            return redirect('group_detail', group_id=group_id)
+    else:
+        group = Group()
+
+    # Handle form submission
     if request.method == 'POST':
-        form = GroupForm(request.POST)
+        form = GroupForm(request.POST, instance=group)
         if form.is_valid():
             group = form.save(commit=False)
-            group.creator = request.user 
-            group.save() # Save the group to the database
-            group.users.add(request.user)  # Add the creator to the group
-            form.save_m2m()  # Needed for many-to-many fields
-            messages.success(request, "Group: Group created successfully.")
-            return redirect('group_detail', group_id=group.id)  # Redirect to the group_detail page of the newly created group
+            group.creator = request.user
+            group.save()
+            group.users.add(request.user)
+            form.save_m2m()
+            messages.success(request, "Group updated successfully." if group_id else "Group created successfully.")
+            return redirect('group_detail', group_id=group.id)
         else:
-            messages.error(request, 'Group: Error creating group. Please try again and fill out all fields.')
-            return redirect('create_group_page')
+            messages.error(request, 'Error creating/updating group. Please try again and fill out all fields.')
     else:
-        form = GroupForm()
-         
-    return redirect('create_group_page')
+        form = GroupForm(instance=group)
+
+    return render(request, 'capstone/create_group.html', {'group_form': form, 'group': group})
 
 # Create a new activity
 def create_activity(request):
