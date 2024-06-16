@@ -11,6 +11,7 @@ urlpatterns = [
     path('create_group/', views.create_group, name='create_group'),
     path('create_activity/', views.create_activity, name='create_activity'),
     path('join_group/<int:group_id>/', views.join_group, name='join_group'),
+    path('leave_group/<int:group_id>/', views.leave_group, name='leave_group'),
     path('calendar_view/', views.calendar_view, name='calendar_view'),
 
 ]

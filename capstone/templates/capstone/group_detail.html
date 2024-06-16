@@ -17,11 +17,14 @@
         <br>
 
         {% if request.user.is_authenticated and not request.user in group.users.all %}
-            Do you want to join the group? <br>
-            <a href="{% url 'join_group' group.id %}" class="btn btn-primary">Click here to join the group</a>
+            Do you want to join the group?
+            <br> <br>
+            <a href="{% url 'join_group' group.id %}" class="btn btn-primary">Join the group</a>
         {% endif %}
         {% if request.user.is_authenticated and request.user in group.users.all %}
-            You are already a member of this group
+            You are a member of this group.
+            <br> <br>
+            <a href="{% url 'leave_group' group.id %}" class="btn btn-danger">Leave the group</a>
         {% endif %}
         </div>  
     </div>

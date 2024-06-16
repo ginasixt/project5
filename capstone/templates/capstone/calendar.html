@@ -5,7 +5,7 @@
 
 <div id="calendar">
     <div id="calendar-header">
-      <button id="prev">Prev</button>
+      <button id="prev">Previous</button>
       <span id="month-year"></span>
       <button id="next">Next</button>
     </div>
@@ -28,22 +28,28 @@
         const currentDate = new Date();
         const daysContainer = document.getElementById('days-container');
     
-        // Render the month and year in the header
         function renderHeader(date) {
             const monthYear = document.getElementById('month-year');
             monthYear.textContent = date.toLocaleDateString('default', { month: 'long', year: 'numeric' });
         }
     
-        // Render the days of the month
         function renderDays(date) {
             daysContainer.innerHTML = '';
-
             const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
             const lastDayOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0);
             const totalDays = lastDayOfMonth.getDate();
-
             const today = new Date();
             const isCurrentMonth = date.getFullYear() === today.getFullYear() && date.getMonth() === today.getMonth();
+            const firstDayIndex = firstDayOfMonth.getDay();
+            const prevLastDay = new Date(date.getFullYear(), date.getMonth(), 0).getDate();
+            
+            // Fill in the blank days at the start of the month
+            for (let i = firstDayIndex; i > 0; i--) {
+                const dayDiv = document.createElement('div');
+                dayDiv.classList.add('day', 'prev-month-day');
+                dayDiv.textContent = prevLastDay - i + 1;
+                daysContainer.appendChild(dayDiv);
+            }
 
             // Fill in the days of the month
             for (let i = 1; i <= totalDays; i++) {
@@ -55,51 +61,47 @@
                 dayNumberDiv.textContent = i;
                 dayDiv.appendChild(dayNumberDiv);
 
-                // Convert the current date to the same format as the keys in groupDates
                 const currentDate = new Date(date.getFullYear(), date.getMonth(), i);
                 const currentDateStr = currentDate.toISOString().split('T')[0];
 
-                // Check if the current date is in groupDates
                 if (groupDates.hasOwnProperty(currentDateStr)) {
-                    // Add an additional class to the day's div
                     dayDiv.classList.add('group-event');
-
-                    // Create a new div for the group event details
                     const groupEventDiv = document.createElement('div');
-                    groupEventDiv.classList.add('event');  // Add a class to the group event div
-
-                    // Create a new link for the group event details
+                    groupEventDiv.classList.add('event');
                     const groupEventLink = document.createElement('a');
                     groupEventLink.href = groupDates[currentDateStr].url;
-                    groupEventLink.textContent = groupDates[currentDateStr].time + ' ' + groupDates[currentDateStr].name;
-                    groupEventLink.classList.add('group-event-link');  // Add a class to the group event link
-
+                    groupEventLink.textContent = groupDates[currentDateStr].time + ': ' + groupDates[currentDateStr].name;
+                    groupEventLink.classList.add('group-event-link');
                     groupEventDiv.appendChild(groupEventLink);
                     dayDiv.appendChild(groupEventDiv);
                 }
-            
 
-                // Check if the current date is today
                 if (isCurrentMonth && i === today.getDate()) {
                     dayDiv.classList.add('today');
                 }
 
                 daysContainer.appendChild(dayDiv);
             }
+
+            // Fill in the blank days at the end of the month
+            const remainingDays = 42 - daysContainer.children.length;
+            for (let i = 1; i <= remainingDays; i++) {
+                const dayDiv = document.createElement('div');
+                dayDiv.classList.add('day', 'next-month-day');
+                dayDiv.textContent = i;
+                daysContainer.appendChild(dayDiv);
+            }
         }
     
-        // Change the month displayed
         function changeMonth(month) {
             currentDate.setMonth(currentDate.getMonth() + month);
             renderHeader(currentDate);
             renderDays(currentDate);
         }
     
-        // Initialize the calendar on page load
         renderHeader(currentDate);
         renderDays(currentDate);
     
-        // Event listeners for changing months
         document.getElementById('prev').addEventListener('click', () => changeMonth(-1));
         document.getElementById('next').addEventListener('click', () => changeMonth(1));
     });

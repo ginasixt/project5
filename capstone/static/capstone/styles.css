@@ -30,6 +30,9 @@ body {
     height: 250px;
   }
 
+
+  
+
   /* Pagination */
 
   .pagination {
@@ -45,8 +48,8 @@ body {
 .page-link {
     border-radius: 20px;
     padding: 10px 20px;
-    border: 1px solid #4285f4;
-    color: #4285f4;
+    border: 1px solid #027bff;
+    color: #027bff;
     align-items: center;
     justify-content: center;
 }
@@ -57,7 +60,7 @@ body {
   
   
   .row {
-    background: #f8f9fa;
+    background: #f7f6f6;
   
   }
   
@@ -67,7 +70,7 @@ body {
     .card-deck.two-col .card {
       flex-basis: calc(50% - 30px);
       margin: 1%;
-      background: #f8f9fa;
+      background: #f7f6f6;
     }
 
     .card-deck.three-col .card {
@@ -77,10 +80,10 @@ body {
     }
   }
 
-  .card-deck .card {
-    flex-basis: 66.67%;
-    margin: 1%;
-  }
+.card-deck .card {
+  flex-basis: 66.67%;
+  margin: 1%;
+}
   
 
 .card {
@@ -96,7 +99,7 @@ body {
   height: 4px;
   width: 4px;
   margin-bottom: 2px;
-  background-color: #bbb;
+  background-color: #7b7b7b;
   border-radius: 50%;
   display: inline-block;
 }
@@ -116,19 +119,35 @@ body {
 }
 
 
-
 /* Calender */
 
 #calendar {
   width: 100%;
-  max-width: 600px;
+  max-width: 700px;
   margin: auto;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+  background: white;
 }
 
 #calendar-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 10px 20px;
+  background: white;
+  border-bottom: 1px solid #f7f6f6;
+}
+
+#calendar-header button {
+  background: none;
+  border: none;
+  font-size: 16px;
+}
+
+#month-year {
+  font-size: 16px;
 }
 
 #day-names, #days-container {
@@ -136,40 +155,68 @@ body {
   grid-template-columns: repeat(7, 1fr);
 }
 
+#day-names {
+  background: white;
+  padding: 10px 0;
+  border-bottom: 1px solid #f7f6f6;
+}
+
+#day-names span {
+  text-align: center;
+  color:  #7b7b7b;
+  font-size: 16px;
+}
+
 .day {
-  border: 1px solid #ddd;
-  height: 100px;
+  border: 1px solid #f7f6f6;
+  height: 80px;
+  display: flex;
+  flex-direction: column;
   position: relative;
-  
 }
 
 .day-number {
   text-align: right;
-  display: block;
+  width: 100%;
+  padding: 5px;
+  font-size: 14px;
+  color: #4a4949;
 }
+
 .event {
   position: absolute;
   bottom: 5px;
   left: 5px;
-  background: #007bff;
+  right: 5px;
+  background: #027bff;
   color: white;
-  padding: 2px 5px;
+  padding: 5px;
   border-radius: 3px;
+  font-size: 12px;
+  text-align: center;
 }
 
-.today .day-number {
-  border: 2px solid #f00;
-  border-radius: 50%;
-  padding: 5px;
+.today {
+  background: #ffefef;
+  border-color: #ff7b7b;
+}
+
+.group-event .event {
+  background: #027bff;
 }
 
 .group-event-link {
-    color: #ffffff;
-    background-color: #007bff;
-    text-decoration: none;
-    padding: 5px;
-    border-radius: 5px;
-    display: inline-block;
-  }
+  color: #ffffff;
+  display: block;
+}
 
- /* Calender End */
+.prev-month-day, .next-month-day {
+  text-align: right;
+  width: 100%;
+  padding: 5px;
+  font-size: 14px;
+  color: #7b7b7b; 
+  background: #f7f6f6;
+}
+
+/* Calender End */

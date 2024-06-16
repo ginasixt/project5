@@ -87,6 +87,12 @@ def join_group(request, group_id):
     group.save()
     return redirect('group_detail', group_id=group_id)
 
+# Leave a group
+def leave_group(request, group_id):
+    group = Group.objects.get(id=group_id)
+    group.users.remove(request.user)
+    group.save()
+    return redirect('group_detail', group_id=group_id)
 
 # Create a new group
 def create_group(request):
