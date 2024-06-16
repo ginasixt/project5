@@ -17,6 +17,7 @@ class Group(models.Model):
     time_and_date = models.DateTimeField(default=None)
     users = models.ManyToManyField(User)
     creator = models.ForeignKey(User, on_delete=models.CASCADE, default=None, related_name='creator')
+    recurring = models.BooleanField(default=False)
     def __str__(self):
         return f"The group {self.name} with the activity {self.activity}"
     

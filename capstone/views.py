@@ -8,6 +8,7 @@ from .models import Group
 from .forms import GroupForm, ActivityForm
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from datetime import timedelta
 
 
 # Create your views here.
@@ -45,8 +46,23 @@ def create_group_page(request):
 # Calendar page
 def calendar_view(request):
     user_groups = Group.objects.filter(users=request.user)
-    group_dates = {group.time_and_date.strftime('%Y-%m-%d'): {'time': group.time_and_date.strftime('%H:%M'), 'name': group.name, 'url': reverse('group_detail', args=[group.id])} for group in user_groups}
-    return render(request, 'capstone/calendar.html', {'user_groups': user_groups, 'group_dates': group_dates})
+    group_dates = {}
+    for group in user_groups:
+        formatted_date = group.time_and_date.strftime('%Y-%m-%d')
+        formatted_time = group.time_and_date.strftime('%H:%M')
+        group_name = group.name
+        group_url = reverse('group_detail', args=[group.id])
+        group_dates[formatted_date] = {'time': formatted_time, 'name': group_name, 'url': group_url}
+        
+        if group.recurring:
+            for i in range(1, 10):
+                new_date = group.time_and_date + timedelta(weeks=i)
+                formatted_new_date = new_date.strftime('%Y-%m-%d')
+                formatted_new_time = new_date.strftime('%H:%M')
+                group_dates[formatted_new_date] = {'time': formatted_new_time, 'name': group_name, 'url': group_url}
+    return render(request, 'capstone/calendar.html', {
+        'user_groups': user_groups,
+        'group_dates': group_dates})
 
 # signup page
 def user_signup(request):

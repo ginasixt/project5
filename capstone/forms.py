@@ -9,11 +9,13 @@ class ActivityForm(forms.ModelForm):
         fields = ['name']
 
 class GroupForm(forms.ModelForm):
-    time_and_date = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}), required=True)
+    time_and_date = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}), required=True , label="Date and Time")
+    activity = forms.ModelChoiceField(queryset=Activity.objects.all(), required=True)
+    recurring = forms.BooleanField(required=False, label="Make this event recurring for the next 10 weeks?")
     
     class Meta:
         model = Group
-        fields = ['name', 'location', 'description', 'activity', 'time_and_date']
+        fields = ['name', 'location', 'description', 'activity', 'time_and_date', 'recurring']
 
 class SignupForm(UserCreationForm):
     class Meta:
