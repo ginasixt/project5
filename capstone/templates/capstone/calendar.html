@@ -11,7 +11,13 @@
     </div>
     <div id="calendar-body">
       <div id="day-names">
-        <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+        <span>Sun</span>
+        <span>Mon</span>
+        <span>Tue</span>
+        <span>Wed</span>
+        <span>Thu</span>
+        <span>Fri</span>
+        <span>Sat</span>
       </div>
       <div id="days-container"></div>
     </div>
@@ -43,7 +49,7 @@
             const firstDayIndex = firstDayOfMonth.getDay();
             const prevLastDay = new Date(date.getFullYear(), date.getMonth(), 0).getDate();
             
-            // Fill in the blank days at the start of the month
+            // blank days at the start of the month
             for (let i = firstDayIndex; i > 0; i--) {
                 const dayDiv = document.createElement('div');
                 dayDiv.classList.add('day', 'prev-month-day');
@@ -51,7 +57,7 @@
                 daysContainer.appendChild(dayDiv);
             }
 
-            // Fill in the days of the month
+            // the days of the month
             for (let i = 1; i <= totalDays; i++) {
                 const dayDiv = document.createElement('div');
                 dayDiv.classList.add('day');
@@ -83,7 +89,7 @@
                 daysContainer.appendChild(dayDiv);
             }
 
-            // Fill in the blank days at the end of the month
+            // blank days at the end of the month
             const remainingDays = 42 - daysContainer.children.length;
             for (let i = 1; i <= remainingDays; i++) {
                 const dayDiv = document.createElement('div');

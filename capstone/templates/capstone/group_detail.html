@@ -11,17 +11,27 @@
     <div class="card p-3 mt-2">
         <div class="untereBox">
            
-        <h1>This is the group: {{ group.name }}</h1>
-        {{ group.description }} <br>
-        In {{ group.location }} created by {{ group.creator }}. <br>
+        <div class="d-flex justify-content-between">
+            <h2>{{ group.name }}</h2> 
+            <p>{{ group.location }}</p>
+        </div>
+        
+        <p>created by {{ group.creator }}.</p>
+        
+        {{ group.description }} 
+        <br>
+
         {% if next_event_date is not null %}
-        The next group meet up is on {{ next_event_date }}
+        You can join the group next time on {{ next_event_date }}
         {% elif next_event_date is null %}
-        There are no group events upcoming, the last event was on {{ group.time_and_date }}, 
+        There are no group events upcoming, the last event was on {{ group.time_and_date }}, <br/>
         wait till the creator is updating the dates or <a href="{% url 'create_group' %}">create your own group</a>.
         {% endif %}
+
         <br>
         <br> 
+
+        
 
         {% if request.user.is_authenticated and not request.user in group.users.all %}
             <a href="{% url 'join_group' group.id %}" class="btn btn-primary">Join the group</a>

@@ -16,6 +16,7 @@ class GroupForm(forms.ModelForm):
     class Meta:
         model = Group
         fields = ['name', 'location', 'description', 'activity', 'time_and_date', 'recurring']
+        
 
 class SignupForm(UserCreationForm):
     class Meta:

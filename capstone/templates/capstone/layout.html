@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project 5</title>
+    <title>GroupUp</title>
     <!-- Bootstrap CSS - External -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap CSS - Embedded (for Bootstrap 5 classes) -->
@@ -15,7 +15,7 @@
 </head>
 <body>
   <nav class="navbar navbar-expand-sm navbar-light">
-    <a class="navbar-brand" href="#">Project 5</a>
+    <a class="navbar-brand" href="{% url 'index' %}">GroupUp</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -34,6 +34,9 @@
                 {% if user.is_authenticated %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'create_group_page' %}">Create a Group</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'create_activity_page' %}">Create a Activity</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'calendar_view' %}">My calendar</a>

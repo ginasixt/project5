@@ -1,5 +1,3 @@
-from django.db import IntegrityError
-from django.http import HttpResponseBadRequest
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse 
@@ -9,7 +7,6 @@ from .forms import GroupForm, ActivityForm
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from datetime import timedelta, timezone
-from django.shortcuts import get_object_or_404
 from django.utils import timezone
 
 
@@ -38,8 +35,6 @@ def group_detail(request, group_id):
 # Home page
 def index(request):
     groups = Group.objects.all()
-    group_form = GroupForm()
-    activity_form = ActivityForm()
 
     paginator = Paginator(groups, 5)
     page_number = request.GET.get('page')
@@ -54,11 +49,17 @@ def index(request):
         groups = paginator.page(paginator.num_pages)
 
 
-    return render(request, 'capstone/index.html', {'groups': groups, 'group_form': group_form, 'activity_form': activity_form})
+    return render(request, 'capstone/index.html', {'groups': groups})
 
+# Create group page
 def create_group_page(request):
-    group_form = GroupForm()
+    group_form = GroupForm(instance=Group()) 
     return render(request, 'capstone/create_group.html', {'group_form': group_form})
+
+# Create activity page
+def create_activity_page(request):
+    activity_form = ActivityForm()
+    return render(request, 'capstone/create_activity.html', {'activity_form': activity_form})
 
 # Calendar page
 def calendar_view(request):
@@ -163,9 +164,9 @@ def create_activity(request):
         if form.is_valid():
             activity = form.save()
             messages.success(request, "Activity: Activity created successfully.")
-            return redirect('index')  # Redirect back to the index page
+            return redirect('create_activity_page')  
         else:
             messages.error(request, 'Activity: Error creating activity. Please try again.')
     else:
         form = ActivityForm()
-    return render(request, 'capstone/index.html', {'form': form})
+    return redirect('create_activity_page') 
