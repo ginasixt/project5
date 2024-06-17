@@ -32,11 +32,9 @@ The project has the following structure:
 
 
 ## How to Run the Application
-Ensure you have Python 3.8 or later installed.
-Install the required packages using pip:
-txt
-Run the Django development server:
-Open your web browser and visit http://127.0.0.1:8000/.
+Run the Django server, with: python3 manage.py runserver
+
+Open your web browser: http://127.0.0.1:8000/.
 
 
 ## Additional Information
