@@ -132,7 +132,7 @@ def leave_group(request, group_id):
 def create_group(request, group_id=None):
     # Check if the group exists and the current user is the creator
     if group_id:
-        group = get_object_or_404(Group, id=group_id)
+        group = Group.objects.get(id=group_id)
         if group.creator != request.user:
             messages.error(request, 'You do not have permission to edit this group.')
             return redirect('group_detail', group_id=group_id)
