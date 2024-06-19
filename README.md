@@ -1,6 +1,6 @@
 # CAPSTONE - GroupUp
 
-**Demo video:** [Watch Demo](https://youtu.be/#)
+**Demo video:** [Watch Demo](https://youtu.be/aQwq971m4FQ)
 
 ## Description
 

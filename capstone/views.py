@@ -8,6 +8,8 @@ from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from datetime import timedelta, timezone
 from django.utils import timezone
+from django.utils.timezone import localtime, utc
+import pytz
 
 
 # Create your views here.
@@ -61,20 +63,29 @@ def create_activity_page(request):
     activity_form = ActivityForm()
     return render(request, 'capstone/create_activity.html', {'activity_form': activity_form})
 
+
+
+
+
+
+
 # Calendar page
 def calendar_view(request):
     user_groups = Group.objects.filter(users=request.user)
     group_dates = {}
     for group in user_groups:
-        formatted_date = group.time_and_date.strftime('%Y-%m-%d')
-        formatted_time = group.time_and_date.strftime('%H:%M')
+        # Convert to local time first, then to UTC
+        local_time = localtime(group.time_and_date)
+        utc_time = local_time.astimezone(pytz.utc)
+        formatted_date = utc_time.strftime('%Y-%m-%d')
+        formatted_time = utc_time.strftime('%H:%M')
         group_name = group.name
         group_url = reverse('group_detail', args=[group.id])
         group_dates[formatted_date] = {'time': formatted_time, 'name': group_name, 'url': group_url}
         
         if group.recurring:
             for i in range(1, 10):
-                new_date = group.time_and_date + timedelta(weeks=i)
+                new_date = utc_time + timedelta(weeks=i)
                 formatted_new_date = new_date.strftime('%Y-%m-%d')
                 formatted_new_time = new_date.strftime('%H:%M')
                 group_dates[formatted_new_date] = {'time': formatted_new_time, 'name': group_name, 'url': group_url}
@@ -127,6 +138,16 @@ def leave_group(request, group_id):
     group.users.remove(request.user)
     group.save()
     return redirect('group_detail', group_id=group_id)
+
+# Delete a group    
+def delete_group(request, group_id):
+    group = Group.objects.get(id=group_id)
+    if group.creator != request.user:
+        messages.error(request, 'You cant delete the group, you are not the creator.')
+        return redirect('group_detail', group_id=group_id)
+    group.delete()
+    messages.success(request, "Successfull.")
+    return redirect('index')
 
 # Create a new group
 def create_group(request, group_id=None):

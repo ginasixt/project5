@@ -22,7 +22,7 @@
         <br>
 
         {% if next_event_date is not null %}
-        You can join the group next time on {{ next_event_date }}
+        You can join the event next time on {{ next_event_date }}
         {% elif next_event_date is null %}
         There are no group events upcoming, the last event was on {{ group.time_and_date }}, <br/>
         wait till the creator is updating the dates or <a href="{% url 'create_group' %}">create your own group</a>.
@@ -42,6 +42,7 @@
 
         {% if request.user == group.creator %}
             <a href="{% url 'edit_group' group.id %}" class="btn btn-secondary float-right">Edit Group</a>
+            <a href="{% url 'delete_group' group.id %}" class="btn btn-danger float-right">Delete Group</a>
         {% endif %}
 
         </div>  

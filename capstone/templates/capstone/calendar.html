@@ -28,7 +28,7 @@
     console.log(groupDates);
 </script>
 
-<!-- JavaScript code for calendar functionality -->
+<!-- calendar functionality -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const currentDate = new Date();
@@ -41,13 +41,13 @@
     
         function renderDays(date) {
             daysContainer.innerHTML = '';
-            const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
-            const lastDayOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-            const totalDays = lastDayOfMonth.getDate();
+            const firstDayOfMonth = new Date(Date.UTC(date.getFullYear(), date.getMonth(), 1));
+            const lastDayOfMonth = new Date(Date.UTC(date.getFullYear(), date.getMonth() + 1, 0));
+            const totalDays = lastDayOfMonth.getUTCDate();
             const today = new Date();
-            const isCurrentMonth = date.getFullYear() === today.getFullYear() && date.getMonth() === today.getMonth();
-            const firstDayIndex = firstDayOfMonth.getDay();
-            const prevLastDay = new Date(date.getFullYear(), date.getMonth(), 0).getDate();
+            const isCurrentMonth = date.getUTCFullYear() === today.getUTCFullYear() && date.getUTCMonth() === today.getUTCMonth();
+            const firstDayIndex = firstDayOfMonth.getUTCDay();
+            const prevLastDay = new Date(Date.UTC(date.getFullYear(), date.getMonth(), 0)).getUTCDate();
             
             // blank days at the start of the month
             for (let i = firstDayIndex; i > 0; i--) {
@@ -67,7 +67,7 @@
                 dayNumberDiv.textContent = i;
                 dayDiv.appendChild(dayNumberDiv);
 
-                const currentDate = new Date(date.getFullYear(), date.getMonth(), i);
+                const currentDate = new Date(Date.UTC(date.getFullYear(), date.getMonth(), i));
                 const currentDateStr = currentDate.toISOString().split('T')[0];
 
                 if (groupDates.hasOwnProperty(currentDateStr)) {
@@ -76,13 +76,13 @@
                     groupEventDiv.classList.add('event');
                     const groupEventLink = document.createElement('a');
                     groupEventLink.href = groupDates[currentDateStr].url;
-                    groupEventLink.textContent = groupDates[currentDateStr].time + ': ' + groupDates[currentDateStr].name;
+                    groupEventLink.textContent = groupDates[currentDateStr].time + ': ' + groupDates[currentDateStr].name.substring(0, 10) + '...';
                     groupEventLink.classList.add('group-event-link');
                     groupEventDiv.appendChild(groupEventLink);
                     dayDiv.appendChild(groupEventDiv);
                 }
 
-                if (isCurrentMonth && i === today.getDate()) {
+                if (isCurrentMonth && i === today.getUTCDate()) {
                     dayDiv.classList.add('today');
                 }
 
@@ -100,7 +100,7 @@
         }
     
         function changeMonth(month) {
-            currentDate.setMonth(currentDate.getMonth() + month);
+            currentDate.setUTCMonth(currentDate.getUTCMonth() + month);
             renderHeader(currentDate);
             renderDays(currentDate);
         }
@@ -111,6 +111,6 @@
         document.getElementById('prev').addEventListener('click', () => changeMonth(-1));
         document.getElementById('next').addEventListener('click', () => changeMonth(1));
     });
-    
 </script>
+
 {% endblock %}
